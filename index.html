@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ff69b4">
+<title>深夜のコンビニ ~煩悩との戦い~</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="warning" class="screen active">
+  <div class="warning-box">
+    <h1>⚠️ 警告 ⚠️</h1>
+    <p>このゲームは<br><strong>馬鹿</strong>です。</p>
+    <p>クオリティに期待しないでください。</p>
+    <p>酔った状態でのプレイを推奨します。</p>
+    <p class="age">18歳未満禁止<br>(なんとなく)</p>
+    <button class="btn-main" onclick="startGame()">酔ってる、入る</button>
+    <button class="btn-sub" onclick="alert('帰っていいよ')">素面なので帰る</button>
+  </div>
+</div>
+
+<div id="game" class="screen">
+  <div class="status-bar">
+    <div class="stat">❤️HP <span id="hp">100</span></div>
+    <div class="stat">🍺酔 <span id="drunk">50</span></div>
+    <div class="stat">🔥煩悩 <span id="bonnou">99</span></div>
+    <div class="stat">💴 <span id="money">300</span>円</div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="bg" id="bg">🌙</div>
+    <div class="character" id="char"></div>
+    <div class="effect" id="effect"></div>
+  </div>
+
+  <div class="dialogue-box">
+    <div class="speaker" id="speaker">？？？</div>
+    <div class="text" id="text"></div>
+    <div class="choices" id="choices"></div>
+    <div class="next-hint" id="nextHint">▼タップで次へ</div>
+  </div>
+
+  <button class="menu-btn" onclick="toggleMenu()">≡</button>
+  <div class="menu" id="menu">
+    <button onclick="restart()">最初から</button>
+    <button onclick="toggleMenu()">閉じる</button>
+  </div>
+</div>
+
+<div id="ending" class="screen">
+  <div class="ending-box">
+    <h1 id="endingTitle">エンディング</h1>
+    <p id="endingText"></p>
+    <p class="rank" id="endingRank"></p>
+    <button class="btn-main" onclick="restart()">もう一度</button>
+  </div>
+</div>
+
+<audio id="bgm" loop></audio>
+
+<script src="game.js"></script>
+</body>
+</html>
