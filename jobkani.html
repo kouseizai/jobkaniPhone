@@ -2,871 +2,1276 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#ff69b4">
-<title>深夜のコンビニ ~煩悩との戦い~</title>
+<meta name="theme-color" content="#ff1493">
+<title>深夜の極上スナック『ぽよん』</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
 html, body {
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
+  width: 100%; height: 100vh; height: 100dvh;
   overflow: hidden;
   background: #1a0033;
   color: #fff;
-  font-family: "Hiragino Maru Gothic ProN", "ヒラギノ丸ゴ ProN", sans-serif;
-  user-select: none;
-  -webkit-user-select: none;
+  font-family: "Hiragino Maru Gothic ProN", "ヒラギノ丸ゴ ProN W4", system-ui, sans-serif;
+  user-select: none; -webkit-user-select: none;
   touch-action: manipulation;
-}
-
-.screen {
-  display: none;
-  width: 100%;
-  height: 100%;
   position: fixed;
-  inset: 0;
 }
-.screen.active { display: flex; flex-direction: column; }
 
-/* ---- 警告画面 ---- */
-#warning {
-  background: linear-gradient(135deg, #ff006e, #8338ec, #3a0ca3);
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  animation: pulse 2s infinite;
+#title {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, #ff006e 0%, #5a0099 50%, #1a0033 100%);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  z-index: 100; padding: 20px; text-align: center;
 }
-@keyframes pulse {
-  0%, 100% { filter: hue-rotate(0deg); }
-  50% { filter: hue-rotate(30deg); }
+#title.hidden { display: none; }
+#title h1 {
+  font-size: clamp(28px, 8vw, 48px);
+  text-shadow: 4px 4px 0 #000, -2px -2px 0 #ff69b4, 0 0 30px #ff1493;
+  animation: wobble 2s infinite, neonFlicker 3s infinite;
+  margin-bottom: 8px;
+  color: #fff;
 }
-.warning-box {
-  background: rgba(0,0,0,0.7);
-  border: 3px dashed #ff69b4;
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  max-width: 360px;
-  width: 100%;
+#title h2 {
+  font-size: clamp(16px, 4vw, 22px);
+  color: #ffeb3b;
+  text-shadow: 2px 2px 0 #ff006e;
+  animation: tada 1.5s infinite;
+  margin-bottom: 24px;
 }
-.warning-box h1 { font-size: 28px; margin-bottom: 16px; animation: shake 0.5s infinite; }
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  25% { transform: translateX(-4px) rotate(-2deg); }
-  75% { transform: translateX(4px) rotate(2deg); }
+@keyframes wobble {
+  0%,100% { transform: rotate(-3deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.05); }
 }
-.warning-box p { margin: 12px 0; font-size: 16px; line-height: 1.5; }
-.warning-box .age { color: #ffeb3b; font-weight: bold; margin-top: 20px; }
-
-.btn-main, .btn-sub {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
+@keyframes tada {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.15) rotate(-2deg); }
+}
+@keyframes neonFlicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.6; }
+}
+.title-poyon {
+  font-size: 100px;
+  animation: hopBig 0.6s infinite;
+  margin-bottom: 16px;
+  display: inline-block;
+  filter: drop-shadow(0 0 20px #ff1493);
+}
+@keyframes hopBig {
+  0%,100% { transform: translateY(0) scale(1, 1); }
+  50% { transform: translateY(-30px) scale(0.9, 1.1); }
+}
+.start-btn {
+  background: linear-gradient(45deg, #ff006e, #ff69b4, #ffeb3b);
+  background-size: 200% 200%;
+  animation: rainbow 2s linear infinite;
+  border: 4px solid #fff;
+  color: #fff;
+  padding: 18px 36px;
+  font-size: 22px;
+  font-weight: 900;
+  border-radius: 50px;
+  box-shadow: 0 6px 0 #8b0a3d, 0 0 30px #ff1493;
   cursor: pointer;
   font-family: inherit;
+  text-shadow: 2px 2px 0 #000;
+  letter-spacing: 2px;
 }
-.btn-main {
-  background: linear-gradient(45deg, #ff006e, #ff69b4);
-  color: #fff;
-  box-shadow: 0 4px 0 #8b0a3d;
+.start-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #8b0a3d; }
+@keyframes rainbow {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
-.btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #8b0a3d; }
-.btn-sub {
-  background: #444;
-  color: #ccc;
+.title-warn {
+  margin-top: 24px;
+  font-size: 12px;
+  color: #ffeb3b;
+  background: rgba(0,0,0,0.5);
+  padding: 8px 16px;
+  border-radius: 20px;
+  max-width: 320px;
 }
 
-/* ---- ゲーム画面 ---- */
 #game {
-  background: #000;
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,0,110,0.3), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(138,43,226,0.4), transparent 50%),
+    linear-gradient(180deg, #2a0044 0%, #4a0e7a 100%);
 }
-.status-bar {
-  display: flex;
-  justify-content: space-around;
-  background: rgba(0,0,0,0.85);
-  padding: 8px 4px;
-  font-size: 13px;
-  border-bottom: 2px solid #ff69b4;
-  flex-wrap: wrap;
+
+.hud {
+  background: rgba(0,0,0,0.75);
+  border-bottom: 2px solid #ff1493;
+  padding: 6px 8px;
+  display: flex; flex-direction: column;
   gap: 4px;
+  font-size: 11px;
 }
-.stat { white-space: nowrap; }
-.stat span { color: #ffeb3b; font-weight: bold; }
+.hud-row { display: flex; gap: 6px; align-items: center; }
+.hud-row label { min-width: 50px; }
+.bar {
+  flex: 1; height: 14px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%; width: 0%;
+  transition: width 0.4s cubic-bezier(.5,1.5,.5,1);
+  background: linear-gradient(90deg, #ff006e, #ff69b4);
+}
+.bar.bar-love .bar-fill { background: linear-gradient(90deg, #ff006e, #ff1493, #ffeb3b); }
+.bar.bar-drunk .bar-fill { background: linear-gradient(90deg, #ffeb3b, #ff8c00, #ff0000); }
+.bar.bar-money .bar-fill { background: linear-gradient(90deg, #00ff7f, #00bfff); }
+.bar-text {
+  position: absolute; inset: 0;
+  text-align: center; line-height: 14px;
+  font-size: 10px; font-weight: bold;
+  color: #fff; text-shadow: 1px 1px 0 #000;
+}
 
 .stage {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #1a0033 0%, #4a148c 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  cursor: pointer;
 }
-.bg {
-  position: absolute;
-  font-size: 100px;
-  opacity: 0.3;
-  animation: float 4s ease-in-out infinite;
-}
-@keyframes float {
-  0%,100% { transform: translateY(0) rotate(0); }
-  50% { transform: translateY(-20px) rotate(5deg); }
-}
-.character {
-  font-size: clamp(80px, 25vw, 160px);
-  z-index: 2;
-  transition: transform 0.3s;
-  filter: drop-shadow(0 0 20px #ff69b4);
-  text-align: center;
-  line-height: 1;
-}
-.character.shake { animation: charShake 0.3s; }
-@keyframes charShake {
-  0%,100% { transform: scale(1); }
-  25% { transform: scale(1.1) rotate(-5deg); }
-  75% { transform: scale(1.1) rotate(5deg); }
-}
-.character.bounce { animation: bounce 0.6s; }
-@keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-30px) scale(1.2); }
-}
-.effect {
-  position: absolute;
-  inset: 0;
+
+.bg-deco {
+  position: absolute; inset: 0;
   pointer-events: none;
-  z-index: 3;
+  overflow: hidden;
 }
-.effect.heart::before {
-  content: "💕💖💗💓💞";
+.bg-deco::before, .bg-deco::after {
+  content: "🌃🍸🍶🍺🥃🌃🍸🍶🍺🥃🌃🍸🍶🍺🥃";
   position: absolute;
-  font-size: 40px;
-  top: 30%;
+  font-size: 30px;
+  opacity: 0.15;
+  white-space: nowrap;
+  animation: scrollBg 20s linear infinite;
+}
+.bg-deco::before { top: 10%; }
+.bg-deco::after { top: 70%; animation-duration: 30s; animation-direction: reverse; }
+@keyframes scrollBg {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(50%); }
+}
+
+.disco-light {
+  position: absolute;
+  width: 200%; height: 200%;
+  top: -50%; left: -50%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(255,20,147,0.15) 30deg, transparent 60deg, rgba(0,255,255,0.15) 90deg, transparent 120deg, rgba(255,255,0,0.15) 150deg, transparent 180deg);
+  animation: spin 8s linear infinite;
+  pointer-events: none;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.poyon {
+  position: absolute;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  animation: rise 1.2s ease-out;
+  width: 220px; height: 320px;
+  cursor: pointer;
+  animation: breathing 2s ease-in-out infinite;
 }
-@keyframes rise {
-  0% { opacity: 1; transform: translate(-50%, 0) scale(0.5); }
-  100% { opacity: 0; transform: translate(-50%, -200px) scale(2); }
+.poyon.shake { animation: charShake 0.4s, breathing 2s ease-in-out infinite 0.4s; }
+.poyon.drunk { animation: drunkSway 1.5s ease-in-out infinite; }
+.poyon.happy { animation: happyJump 0.5s ease-in-out infinite; }
+@keyframes breathing {
+  0%,100% { transform: translateX(-50%) scale(1, 1); }
+  50% { transform: translateX(-50%) scale(1.02, 0.99); }
 }
-.effect.flash {
+@keyframes charShake {
+  0%,100% { transform: translateX(-50%) scale(1); }
+  20% { transform: translateX(-58%) scale(1.05) rotate(-3deg); }
+  60% { transform: translateX(-42%) scale(1.05) rotate(3deg); }
+}
+@keyframes drunkSway {
+  0%,100% { transform: translateX(-50%) rotate(-5deg); }
+  50% { transform: translateX(-50%) rotate(5deg); }
+}
+@keyframes happyJump {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-15px); }
+}
+
+.hair {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 140px; height: 90px;
+  background: #6b3410;
+  border-radius: 70px 70px 30px 30px;
+  z-index: 1;
+}
+.hair::before {
+  content: "";
+  position: absolute;
+  width: 30px; height: 60px;
+  background: #6b3410;
+  border-radius: 50%;
+  top: 30px; left: -10px;
+}
+.hair::after {
+  content: "";
+  position: absolute;
+  width: 30px; height: 60px;
+  background: #6b3410;
+  border-radius: 50%;
+  top: 30px; right: -10px;
+}
+.ribbon {
+  position: absolute;
+  top: -8px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+  z-index: 2;
+  animation: ribbonWiggle 1s ease-in-out infinite;
+}
+@keyframes ribbonWiggle {
+  0%,100% { transform: translateX(-50%) rotate(-10deg); }
+  50% { transform: translateX(-50%) rotate(10deg); }
+}
+
+.face {
+  position: absolute;
+  top: 20px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 130px;
+  background: #ffd9b3;
+  border-radius: 50%;
+  z-index: 2;
+  border: 2px solid #2a1a0a;
+}
+.face .blush {
+  position: absolute;
+  width: 20px; height: 12px;
+  background: #ff6b9d;
+  border-radius: 50%;
+  top: 70px;
+  opacity: 0.7;
+}
+.face .blush.left { left: 12px; }
+.face .blush.right { right: 12px; }
+.face .blush.deep { background: #ff0040; opacity: 1; width: 28px; height: 16px; }
+
+.eye {
+  position: absolute;
+  top: 50px;
+  width: 18px; height: 22px;
+  background: #2a1a0a;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+.eye.left { left: 26px; }
+.eye.right { right: 26px; }
+.eye::after {
+  content: "";
+  position: absolute;
+  width: 6px; height: 6px;
   background: #fff;
-  animation: flash 0.4s;
+  border-radius: 50%;
+  top: 3px; left: 4px;
 }
-@keyframes flash {
+.eye.heart {
+  background: transparent;
+  width: 22px; height: 22px;
+  font-size: 22px;
+  color: #ff006e;
+  text-align: center;
+  line-height: 22px;
+}
+.eye.heart::before { content: "♥"; }
+.eye.heart::after { display: none; }
+.eye.swirl {
+  background: transparent;
+  font-size: 22px;
+  color: #2a1a0a;
+  line-height: 22px;
+  text-align: center;
+}
+.eye.swirl::before { content: "@"; animation: spin 1s linear infinite; display: inline-block; }
+.eye.swirl::after { display: none; }
+
+.mouth {
+  position: absolute;
+  bottom: 25px; left: 50%;
+  transform: translateX(-50%);
+  width: 30px; height: 12px;
+  background: #ff006e;
+  border-radius: 0 0 20px 20px;
+  transition: all 0.3s;
+}
+.mouth.smile { width: 40px; height: 18px; border-radius: 0 0 25px 25px; }
+.mouth.kiss { width: 18px; height: 18px; border-radius: 50%; background: #ff1493; }
+.mouth.shock { width: 22px; height: 22px; border-radius: 50%; background: #2a1a0a; }
+
+.body-top {
+  position: absolute;
+  top: 130px; left: 50%;
+  transform: translateX(-50%);
+  width: 150px; height: 100px;
+  background: #ff006e;
+  border-radius: 30px 30px 10px 10px;
+  z-index: 1;
+  border: 2px solid #2a1a0a;
+}
+.body-top::before {
+  content: "♡";
+  position: absolute;
+  top: 38px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  color: #ffeb3b;
+}
+
+.poyon-bumps {
+  position: absolute;
+  top: 145px; left: 50%;
+  transform: translateX(-50%);
+  width: 130px; height: 50px;
+  z-index: 2;
+  pointer-events: none;
+}
+.bump {
+  position: absolute;
+  width: 50px; height: 45px;
+  background: radial-gradient(circle at 30% 30%, #ffb6c1, #ff006e);
+  border-radius: 50%;
+  top: 0;
+  border: 2px solid #2a1a0a;
+  animation: jiggle 2s ease-in-out infinite;
+}
+.bump.left { left: 0; animation-delay: 0s; }
+.bump.right { right: 0; animation-delay: 0.1s; }
+@keyframes jiggle {
+  0%,100% { transform: translateY(0) scale(1,1); }
+  25% { transform: translateY(-3px) scale(1.05,0.95); }
+  75% { transform: translateY(3px) scale(0.95,1.05); }
+}
+.poyon.shake .bump { animation: jiggleHard 0.4s ease-in-out infinite; }
+@keyframes jiggleHard {
+  0%,100% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-8px) scale(1.2, 0.8); }
+  50% { transform: translateY(0) scale(0.85, 1.15); }
+  75% { transform: translateY(-4px) scale(1.1, 0.9); }
+}
+
+.skirt {
+  position: absolute;
+  top: 215px; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 90px solid transparent;
+  border-right: 90px solid transparent;
+  border-top: 70px solid #4a0e7a;
+  z-index: 0;
+}
+
+.arm {
+  position: absolute;
+  top: 150px;
+  width: 20px; height: 80px;
+  background: #ffd9b3;
+  border: 2px solid #2a1a0a;
+  border-radius: 10px;
+  z-index: 0;
+  transition: transform 0.3s;
+}
+.arm.left { left: 22px; transform: rotate(15deg); transform-origin: top center; }
+.arm.right { right: 22px; transform: rotate(-15deg); transform-origin: top center; }
+.poyon.happy .arm.left { animation: armWaveLeft 0.5s ease-in-out infinite; }
+.poyon.happy .arm.right { animation: armWaveRight 0.5s ease-in-out infinite; }
+@keyframes armWaveLeft {
+  0%,100% { transform: rotate(15deg); }
+  50% { transform: rotate(-30deg); }
+}
+@keyframes armWaveRight {
+  0%,100% { transform: rotate(-15deg); }
+  50% { transform: rotate(30deg); }
+}
+
+.speech {
+  position: absolute;
+  background: #fff;
+  color: #2a1a0a;
+  border: 3px solid #ff006e;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 10;
+  animation: speechIn 0.3s;
+  box-shadow: 3px 3px 0 #2a1a0a;
+  max-width: 90%;
+}
+.speech::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid #ff006e;
+}
+@keyframes speechIn {
+  0% { transform: translateX(-50%) scale(0); }
+  60% { transform: translateX(-50%) scale(1.2); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+.speech.hidden { display: none; }
+
+.float-icon {
+  position: absolute;
+  font-size: 40px;
+  pointer-events: none;
+  animation: floatUp 1.5s ease-out forwards;
+  z-index: 20;
+  text-shadow: 0 0 10px #fff;
+}
+@keyframes floatUp {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.5) rotate(0); }
+  20% { opacity: 1; transform: translate(-50%, -20px) scale(1.5) rotate(-15deg); }
+  100% { opacity: 0; transform: translate(-50%, -200px) scale(1.8) rotate(360deg); }
+}
+
+.boom-text {
+  position: absolute;
+  font-size: 48px;
+  font-weight: 900;
+  color: #ffeb3b;
+  -webkit-text-stroke: 3px #ff006e;
+  pointer-events: none;
+  animation: boomText 0.8s ease-out forwards;
+  z-index: 25;
+  white-space: nowrap;
+  font-family: "Impact", "Hiragino Maru Gothic ProN", sans-serif;
+}
+@keyframes boomText {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-15deg); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.4) rotate(8deg); }
+  60% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(-3deg); }
+  100% { opacity: 0; transform: translate(-50%, -150%) scale(1.5) rotate(15deg); }
+}
+
+.fx-overlay {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+.flash-white {
+  position: absolute; inset: 0;
+  background: #fff;
+  animation: flashFade 0.4s forwards;
+}
+@keyframes flashFade {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
+.flash-red {
+  position: absolute; inset: 0;
+  background: #ff0040;
+  animation: flashFade 0.5s forwards;
+}
+.flash-rainbow {
+  position: absolute; inset: 0;
+  background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 200% 200%;
+  animation: rainbowFlash 1s forwards;
+  mix-blend-mode: overlay;
+}
+@keyframes rainbowFlash {
+  0% { opacity: 0; background-position: 0% 0%; }
+  50% { opacity: 1; background-position: 100% 100%; }
+  100% { opacity: 0; background-position: 0% 0%; }
+}
 
-.dialogue-box {
-  background: linear-gradient(180deg, rgba(20,0,40,0.95), rgba(40,0,60,0.95));
-  border-top: 3px solid #ff69b4;
-  padding: 12px 16px 16px;
-  min-height: 180px;
-  max-height: 50vh;
-  overflow-y: auto;
-  position: relative;
+.shake-screen { animation: screenShake 0.3s; }
+@keyframes screenShake {
+  0%,100% { transform: translate(0, 0); }
+  20% { transform: translate(-6px, 3px); }
+  40% { transform: translate(5px, -4px); }
+  60% { transform: translate(-3px, 5px); }
+  80% { transform: translate(4px, -2px); }
 }
-.speaker {
-  display: inline-block;
-  background: #ff006e;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 8px;
+
+.actions {
+  background: rgba(0,0,0,0.85);
+  border-top: 3px solid #ff1493;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
 }
-.text {
-  font-size: 16px;
-  line-height: 1.6;
-  min-height: 50px;
-  white-space: pre-wrap;
-}
-.choices {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
-}
-.choices button {
-  background: rgba(255,105,180,0.2);
-  border: 2px solid #ff69b4;
+.act-btn {
+  background: linear-gradient(180deg, #ff006e, #8b0a3d);
+  border: 2px solid #fff;
   color: #fff;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  text-align: left;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-.choices button:active {
-  background: #ff69b4;
-  transform: scale(0.98);
-}
-.next-hint {
-  position: absolute;
-  bottom: 6px;
-  right: 12px;
+  padding: 10px 4px;
+  border-radius: 12px;
   font-size: 12px;
-  color: #ff69b4;
-  animation: blink 1s infinite;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 3px 0 #5a0024;
+  transition: all 0.1s;
 }
-@keyframes blink {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.3; }
+.act-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #5a0024;
+  background: linear-gradient(180deg, #ff69b4, #ff006e);
 }
-.next-hint.hidden { display: none; }
+.act-btn .ico { font-size: 24px; }
+.act-btn .cost { font-size: 9px; color: #ffeb3b; }
+
+.scene-label {
+  position: absolute;
+  top: 8px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  border: 2px solid #ffeb3b;
+  padding: 4px 16px;
+  border-radius: 16px;
+  font-size: 12px;
+  z-index: 5;
+  color: #ffeb3b;
+}
 
 .menu-btn {
   position: fixed;
-  top: 4px;
-  right: 8px;
+  top: 4px; right: 6px;
+  width: 30px; height: 30px;
   background: rgba(0,0,0,0.7);
-  color: #fff;
-  border: 1px solid #ff69b4;
-  width: 32px;
-  height: 32px;
+  border: 1px solid #ff1493;
   border-radius: 50%;
-  font-size: 18px;
-  z-index: 10;
+  color: #fff; font-size: 16px;
   cursor: pointer;
+  z-index: 200;
 }
-.menu {
-  display: none;
+.menu-pop {
   position: fixed;
-  top: 40px;
-  right: 8px;
-  background: rgba(0,0,0,0.9);
-  border: 1px solid #ff69b4;
-  border-radius: 8px;
+  top: 38px; right: 6px;
+  background: rgba(0,0,0,0.95);
+  border: 2px solid #ff1493;
+  border-radius: 10px;
   padding: 8px;
-  z-index: 11;
+  z-index: 200;
+  display: none;
 }
-.menu.show { display: block; }
-.menu button {
+.menu-pop.show { display: block; }
+.menu-pop button {
   display: block;
-  width: 120px;
-  padding: 8px;
+  width: 140px;
   margin: 4px 0;
+  padding: 8px;
   background: #ff006e;
-  color: #fff;
   border: none;
-  border-radius: 4px;
+  color: #fff;
+  border-radius: 6px;
   font-family: inherit;
   cursor: pointer;
+  font-size: 13px;
 }
 
-/* ---- エンディング ---- */
 #ending {
-  background: radial-gradient(circle, #ff006e, #1a0033);
-  justify-content: center;
-  align-items: center;
+  position: fixed; inset: 0;
+  background: radial-gradient(circle, #ff006e 0%, #1a0033 80%);
+  display: none;
+  justify-content: center; align-items: center;
+  flex-direction: column;
+  z-index: 300;
+  padding: 20px;
+  text-align: center;
+}
+#ending.show { display: flex; }
+#ending .big-emoji {
+  font-size: 100px;
+  margin-bottom: 16px;
+  animation: hopBig 0.6s infinite;
+}
+#ending h1 {
+  font-size: 28px;
+  color: #ffeb3b;
+  text-shadow: 3px 3px 0 #000;
+  margin-bottom: 12px;
+  animation: tada 1s infinite;
+}
+#ending p {
+  font-size: 15px;
+  margin: 16px 0;
+  max-width: 320px;
+  line-height: 1.6;
+  background: rgba(0,0,0,0.6);
+  padding: 12px;
+  border-radius: 12px;
+  white-space: pre-line;
+}
+#ending .rank-display {
+  font-size: 80px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 4px 4px 0 #ff006e, -2px -2px 0 #00bfff;
+  margin: 8px 0;
+  animation: wobble 1s infinite;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px; height: 14px;
+  pointer-events: none;
+  z-index: 30;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+#minigame {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 250;
+  display: none;
+  flex-direction: column; align-items: center; justify-content: center;
   padding: 20px;
 }
-.ending-box {
-  background: rgba(0,0,0,0.85);
-  border: 3px solid gold;
-  border-radius: 16px;
-  padding: 32px 24px;
+#minigame.show { display: flex; }
+.mg-title {
+  font-size: 20px;
+  color: #ffeb3b;
+  text-shadow: 2px 2px 0 #ff006e;
+  margin-bottom: 16px;
   text-align: center;
-  max-width: 360px;
-  width: 100%;
+  line-height: 1.5;
 }
-.ending-box h1 {
-  font-size: 24px;
-  color: gold;
-  margin-bottom: 20px;
-  animation: shake 1s infinite;
+.mg-bar-wrap {
+  width: 90%; max-width: 320px;
+  height: 50px;
+  background: #222;
+  border: 3px solid #fff;
+  border-radius: 25px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 24px;
 }
-.ending-box p {
+.mg-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00ff7f, #ffeb3b, #ff006e);
+  transition: width 0.05s linear;
+}
+.mg-target {
+  position: absolute;
+  top: -3px; bottom: -3px;
+  left: 60%;
+  width: 20%;
+  background: rgba(255,255,255,0.25);
+  border-left: 3px solid #fff;
+  border-right: 3px solid #fff;
+  box-sizing: border-box;
+}
+.mash-btn {
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff69b4, #ff006e);
+  border: 6px solid #fff;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 0 #5a0024, 0 0 30px #ff1493;
+  font-family: inherit;
+  line-height: 1.1;
+}
+.mash-btn:active { transform: translateY(4px); box-shadow: 0 6px 0 #5a0024; }
+.mg-counter {
+  margin-top: 16px;
   font-size: 16px;
-  line-height: 1.6;
-  margin: 16px 0;
+  color: #ffeb3b;
+  text-align: center;
 }
-.ending-box .rank {
-  font-size: 48px;
-  font-weight: bold;
-  color: #ff69b4;
-  text-shadow: 0 0 20px #ff006e;
-  margin: 20px 0;
-}
-
 </style>
 </head>
 <body>
-<div id="warning" class="screen active">
-  <div class="warning-box">
-    <h1>⚠️ 警告 ⚠️</h1>
-    <p>このゲームは<br><strong>馬鹿</strong>です。</p>
-    <p>クオリティに期待しないでください。</p>
-    <p>酔った状態でのプレイを推奨します。</p>
-    <p class="age">18歳未満禁止<br>(なんとなく)</p>
-    <button class="btn-main" id="btnStart">酔ってる、入る</button>
-    <button class="btn-sub" id="btnQuit">素面なので帰る</button>
+
+<div id="title">
+  <div class="title-poyon">🍑</div>
+  <h1>深夜の極上スナック<br>『ぽよん』</h1>
+  <h2>~煩悩との戦い~</h2>
+  <button class="start-btn" id="btnStart">入店する</button>
+  <div class="title-warn">
+    ⚠️ クオリティに期待するな<br>
+    酔った状態でのプレイ推奨<br>
+    18禁(なんとなく)
   </div>
 </div>
 
-<div id="game" class="screen">
-  <div class="status-bar">
-    <div class="stat">❤️HP <span id="hp">100</span></div>
-    <div class="stat">🍺酔 <span id="drunk">50</span></div>
-    <div class="stat">🔥煩悩 <span id="bonnou">99</span></div>
-    <div class="stat">💴 <span id="money">300</span>円</div>
+<div id="game">
+  <div class="hud">
+    <div class="hud-row">
+      <label>💖好感度</label>
+      <div class="bar bar-love"><div class="bar-fill" id="barLove"></div><div class="bar-text" id="txtLove">0/100</div></div>
+    </div>
+    <div class="hud-row">
+      <label>🍺酔い</label>
+      <div class="bar bar-drunk"><div class="bar-fill" id="barDrunk"></div><div class="bar-text" id="txtDrunk">0/100</div></div>
+    </div>
+    <div class="hud-row">
+      <label>💴所持金</label>
+      <div class="bar bar-money"><div class="bar-fill" id="barMoney"></div><div class="bar-text" id="txtMoney">5000円</div></div>
+    </div>
   </div>
 
   <div class="stage" id="stage">
-    <div class="bg" id="bg">🌙</div>
-    <div class="character" id="char"></div>
-    <div class="effect" id="effect"></div>
+    <div class="bg-deco"></div>
+    <div class="disco-light"></div>
+    <div class="scene-label" id="sceneLabel">STAGE 1: お通し</div>
+
+    <div class="poyon" id="poyon">
+      <div class="hair"></div>
+      <div class="ribbon">🎀</div>
+      <div class="face">
+        <div class="eye left" id="eyeL"></div>
+        <div class="eye right" id="eyeR"></div>
+        <div class="blush left" id="blushL"></div>
+        <div class="blush right" id="blushR"></div>
+        <div class="mouth smile" id="mouth"></div>
+      </div>
+      <div class="body-top"></div>
+      <div class="poyon-bumps">
+        <div class="bump left"></div>
+        <div class="bump right"></div>
+      </div>
+      <div class="arm left"></div>
+      <div class="arm right"></div>
+      <div class="skirt"></div>
+    </div>
+
+    <div class="speech hidden" id="speech">いらっしゃ〜い♡</div>
+    <div class="fx-overlay" id="fxOverlay"></div>
   </div>
 
-  <div class="dialogue-box">
-    <div class="speaker" id="speaker">？？？</div>
-    <div class="text" id="text"></div>
-    <div class="choices" id="choices"></div>
-    <div class="next-hint" id="nextHint">▼タップで次へ</div>
-  </div>
-
-  <button class="menu-btn" id="btnMenu">≡</button>
-  <div class="menu" id="menu">
-    <button id="btnRestart">最初から</button>
-    <button id="btnCloseMenu">閉じる</button>
+  <div class="actions">
+    <button class="act-btn" id="actDrink">
+      <div class="ico">🍶</div>
+      <div>お酌</div>
+      <div class="cost">-500円</div>
+    </button>
+    <button class="act-btn" id="actGift">
+      <div class="ico">🎁</div>
+      <div>プレゼント</div>
+      <div class="cost">-1500円</div>
+    </button>
+    <button class="act-btn" id="actSing">
+      <div class="ico">🎤</div>
+      <div>デュエット</div>
+      <div class="cost">-1000円</div>
+    </button>
+    <button class="act-btn" id="actKuchi">
+      <div class="ico">💋</div>
+      <div>口説く</div>
+      <div class="cost">タイミング</div>
+    </button>
   </div>
 </div>
 
-<div id="ending" class="screen">
-  <div class="ending-box">
-    <h1 id="endingTitle">エンディング</h1>
-    <p id="endingText"></p>
-    <p class="rank" id="endingRank"></p>
-    <button class="btn-main" id="btnEndRestart">もう一度</button>
-  </div>
+<button class="menu-btn" id="btnMenu">≡</button>
+<div class="menu-pop" id="menu">
+  <button id="btnRestart">最初から</button>
+  <button id="btnCloseMenu">閉じる</button>
 </div>
 
-<audio id="bgm" loop></audio>
+<div id="minigame">
+  <div class="mg-title" id="mgTitle">白いゾーンでタップ!!<br>(3回中2回成功で大成功)</div>
+  <div class="mg-bar-wrap">
+    <div class="mg-bar" id="mgBar"></div>
+    <div class="mg-target" id="mgTarget"></div>
+  </div>
+  <button class="mash-btn" id="mashBtn">💋<br>NOW!!</button>
+  <div class="mg-counter" id="mgCounter">残り: 3 回 / 成功: 0</div>
+</div>
+
+<div id="ending">
+  <div class="big-emoji" id="endEmoji">👰</div>
+  <h1 id="endTitle">エンディング</h1>
+  <div class="rank-display" id="endRank">S</div>
+  <p id="endText">エンディングテキスト</p>
+  <button class="start-btn" id="btnPlayAgain" style="margin-top:20px;">もう一度</button>
+</div>
 
 <script>
-// 深夜のコンビニ ~煩悩との戦い~
-// Yolo製造、品質保証なし
+const $ = id => document.getElementById(id);
+const rand = (a,b) => Math.random()*(b-a)+a;
+const irand = (a,b) => Math.floor(rand(a,b+1));
 
-const state = {
-  hp: 100,
-  drunk: 50,
-  bonnou: 99,
-  money: 300,
-  flags: {},
-  scene: "start",
-  index: 0,
-  typing: false,
-  fullText: ""
-};
-
-function $(id) { return document.getElementById(id); }
-
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  $(id).classList.add("active");
+function bindTap(el, fn) {
+  if (!el) return;
+  let lock = false;
+  const wrap = (e) => {
+    if (lock) return;
+    lock = true;
+    setTimeout(() => { lock = false; }, 250);
+    if (e.cancelable) e.preventDefault();
+    fn(e);
+  };
+  el.addEventListener("touchend", wrap, { passive: false });
+  el.addEventListener("click", wrap);
 }
 
+const state = {
+  love: 0, drunk: 0, money: 5000, stage: 1, ended: false
+};
+
+function updateHUD() {
+  $("barLove").style.width = Math.min(100, state.love) + "%";
+  $("txtLove").textContent = Math.min(100, Math.floor(state.love)) + "/100";
+  $("barDrunk").style.width = Math.min(100, state.drunk) + "%";
+  $("txtDrunk").textContent = Math.min(100, Math.floor(state.drunk)) + "/100";
+  $("barMoney").style.width = Math.min(100, state.money/100) + "%";
+  $("txtMoney").textContent = state.money + "円";
+
+  const newStage = state.love < 30 ? 1 : state.love < 60 ? 2 : state.love < 90 ? 3 : 4;
+  if (newStage !== state.stage) {
+    state.stage = newStage;
+    updateStage();
+  }
+  updateFace();
+}
+
+function updateStage() {
+  const labels = {
+    1: "STAGE 1: お通し",
+    2: "STAGE 2: 仲良くなった",
+    3: "STAGE 3: いい感じ💕",
+    4: "STAGE 4: 極上タイム🔥"
+  };
+  $("sceneLabel").textContent = labels[state.stage];
+  showSpeech(["ねぇ、もう一杯飲も?","ちょっと近づいてもいい?","ねぇ…2人きりになりたい…♡","だ・い・す・き♡♡♡"][state.stage-1]);
+  if (state.stage === 4) {
+    document.querySelector(".disco-light").style.animationDuration = "2s";
+    spawnConfetti(60);
+    flash("rainbow");
+  }
+}
+
+function updateFace() {
+  const poyon = $("poyon");
+  poyon.classList.remove("drunk", "happy");
+  if (state.drunk > 70) poyon.classList.add("drunk");
+  else if (state.love > 60) poyon.classList.add("happy");
+
+  const eyeL = $("eyeL"), eyeR = $("eyeR");
+  const mouth = $("mouth");
+  const blushL = $("blushL"), blushR = $("blushR");
+  eyeL.className = "eye left";
+  eyeR.className = "eye right";
+  mouth.className = "mouth";
+  blushL.className = "blush left";
+  blushR.className = "blush right";
+
+  if (state.drunk > 80) {
+    eyeL.classList.add("swirl");
+    eyeR.classList.add("swirl");
+    mouth.classList.add("shock");
+    blushL.classList.add("deep");
+    blushR.classList.add("deep");
+  } else if (state.love > 80) {
+    eyeL.classList.add("heart");
+    eyeR.classList.add("heart");
+    mouth.classList.add("kiss");
+    blushL.classList.add("deep");
+    blushR.classList.add("deep");
+  } else if (state.love > 40 || state.drunk > 40) {
+    mouth.classList.add("smile");
+  }
+}
+
+function showSpeech(text, dur=2200) {
+  const s = $("speech");
+  s.textContent = text;
+  s.classList.remove("hidden");
+  clearTimeout(s._t);
+  s._t = setTimeout(() => s.classList.add("hidden"), dur);
+}
+
+function floatIcon(emoji, x, y) {
+  const el = document.createElement("div");
+  el.className = "float-icon";
+  el.textContent = emoji;
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+  $("stage").appendChild(el);
+  setTimeout(() => el.remove(), 1500);
+}
+
+function boomText(text, x, y) {
+  const el = document.createElement("div");
+  el.className = "boom-text";
+  el.textContent = text;
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+  $("stage").appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+function flash(type) {
+  const overlay = $("fxOverlay");
+  const el = document.createElement("div");
+  el.className = "flash-" + (type || "white");
+  overlay.appendChild(el);
+  setTimeout(() => el.remove(), type === "rainbow" ? 1000 : 500);
+}
+
+function shakeScreen() {
+  const g = $("game");
+  g.classList.remove("shake-screen");
+  void g.offsetWidth;
+  g.classList.add("shake-screen");
+  setTimeout(() => g.classList.remove("shake-screen"), 300);
+}
+
+function shakePoyon() {
+  const p = $("poyon");
+  p.classList.remove("shake");
+  void p.offsetWidth;
+  p.classList.add("shake");
+  setTimeout(() => p.classList.remove("shake"), 400);
+}
+
+function spawnConfetti(n) {
+  n = n || 30;
+  const colors = ["#ff006e","#ffeb3b","#00ff7f","#00bfff","#ff8c00","#ff1493"];
+  for (let i=0; i<n; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = rand(0,100) + "%";
+    c.style.background = colors[irand(0,colors.length-1)];
+    c.style.animationDuration = rand(2,4) + "s";
+    c.style.animationDelay = rand(0,1) + "s";
+    if (Math.random() > 0.5) c.style.borderRadius = "50%";
+    $("stage").appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+let audioCtx = null;
+function beep(freq, dur, type, vol) {
+  freq = freq || 440; dur = dur || 0.1; type = type || "square"; vol = vol == null ? 0.1 : vol;
+  try {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.value = vol;
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.stop(audioCtx.currentTime + dur);
+  } catch(e) {}
+}
+function poyonSound() {
+  beep(800, 0.08, "sine", 0.15);
+  setTimeout(() => beep(1200, 0.1, "sine", 0.12), 50);
+  setTimeout(() => beep(600, 0.15, "sine", 0.1), 130);
+}
+function kissSound() {
+  beep(1500, 0.05, "sine", 0.15);
+  setTimeout(() => beep(2000, 0.1, "sine", 0.12), 60);
+}
+function drinkSound() {
+  for (let i=0; i<5; i++) {
+    setTimeout(() => beep(200+i*50, 0.06, "triangle", 0.08), i*60);
+  }
+}
+
+function onPoyonTap(e) {
+  const stage = $("stage");
+  const r = stage.getBoundingClientRect();
+  const t = e.touches?.[0] || e.changedTouches?.[0];
+  const cx = t ? t.clientX : (e.clientX || r.width/2);
+  const cy = t ? t.clientY : (e.clientY || r.height/2);
+  const x = cx - r.left;
+  const y = cy - r.top;
+
+  const poyon = $("poyon");
+  const pr = poyon.getBoundingClientRect();
+  const relY = cy - pr.top;
+
+  shakePoyon();
+  poyonSound();
+
+  let gain = 1;
+  let icon = "💕";
+  let words = ["きゃっ♡", "もぉ〜♡", "やん♡", "えへへ♡", "もっと…?"];
+
+  if (relY < 100) {
+    icon = "✨";
+    words = ["なでなで気持ちいい〜♡", "やさし〜♪", "そこ好き♡"];
+    gain = 2;
+  } else if (relY < 200) {
+    icon = "💕";
+    words = ["きゃーーっ!!", "もぉっ!エッチ♡", "そこは…ダメ♡", "ぽよ〜ん♡"];
+    gain = 4;
+    boomText("ぽよん!!", x, y);
+    flash("white");
+  } else {
+    icon = "💢";
+    words = ["こ・の・へ・ん・た・い!", "セクハラで通報するよ?", "そこは触っちゃダメ!!"];
+    gain = -3;
+    flash("red");
+    shakeScreen();
+  }
+
+  for (let i=0; i<3; i++) {
+    setTimeout(() => floatIcon(icon, x + rand(-30,30), y + rand(-20,20)), i*80);
+  }
+
+  showSpeech(words[irand(0, words.length-1)]);
+  state.love = Math.max(0, state.love + gain);
+  if (gain < 0) state.drunk = Math.max(0, state.drunk - 2);
+  updateHUD();
+  checkEnding();
+}
+
+function doDrink() {
+  if (state.money < 500) { showSpeech("お金…足りないみたい…"); return; }
+  state.money -= 500;
+  state.drunk += irand(15, 25);
+  state.love += irand(3, 8);
+  drinkSound();
+  showSpeech(["かんぱ〜い♡", "んくっ…んく…ぷはっ!", "おいしい〜♡"][irand(0,2)]);
+  for (let i=0; i<5; i++) {
+    setTimeout(() => floatIcon("🍺", rand(80, 320), rand(150,300)), i*80);
+  }
+  shakePoyon();
+  if (state.drunk > 95) {
+    state.drunk = 95;
+    showSpeech("う゛…もう飲めない…");
+  }
+  updateHUD();
+  checkEnding();
+}
+
+function doGift() {
+  if (state.money < 1500) { showSpeech("お金…足りないよ…"); return; }
+  state.money -= 1500;
+  state.love += irand(15, 25);
+  flash("white");
+  spawnConfetti(20);
+  showSpeech(["わ〜!ありがとう♡", "うれしい〜!!♡♡", "そんな…でも、もらっちゃう♡"][irand(0,2)]);
+  const gifts = ["🎁","💎","💐","💍","🧸"];
+  for (let i=0; i<8; i++) {
+    setTimeout(() => floatIcon(gifts[irand(0,gifts.length-1)], rand(50,350), rand(150,350)), i*80);
+  }
+  beep(660, 0.1); setTimeout(()=>beep(880,0.1), 100); setTimeout(()=>beep(1100,0.2),200);
+  updateHUD();
+  checkEnding();
+}
+
+function doSing() {
+  if (state.money < 1000) { showSpeech("お金…ないって…"); return; }
+  state.money -= 1000;
+  state.love += irand(8, 15);
+  showSpeech("🎵あ〜なたとデュエット〜🎵");
+  const notes = ["🎵","🎶","🎤","♪","♫"];
+  let i = 0;
+  const iv = setInterval(() => {
+    floatIcon(notes[irand(0,notes.length-1)], rand(50,350), rand(150,350));
+    beep(440 + irand(-100,400), 0.1, "sine", 0.08);
+    if (++i > 10) clearInterval(iv);
+  }, 150);
+  updateHUD();
+  checkEnding();
+}
+
+function doKuchi() {
+  startMinigame();
+}
+
+let mgInterval = null;
+let mgPos = 0;
+let mgDir = 1;
+let mgTries = 3;
+let mgSuccesses = 0;
+
+function startMinigame() {
+  $("minigame").classList.add("show");
+  mgPos = 0;
+  mgDir = 1;
+  mgTries = 3;
+  mgSuccesses = 0;
+  $("mgCounter").textContent = "残り: " + mgTries + " 回 / 成功: 0";
+  if (mgInterval) clearInterval(mgInterval);
+  mgInterval = setInterval(() => {
+    mgPos += mgDir * 2.5;
+    if (mgPos >= 100) { mgPos = 100; mgDir = -1; }
+    if (mgPos <= 0) { mgPos = 0; mgDir = 1; }
+    $("mgBar").style.width = mgPos + "%";
+  }, 25);
+}
+
+function mashTap() {
+  beep(800, 0.1);
+  if (mgPos >= 60 && mgPos <= 80) {
+    mgSuccesses++;
+    boomText("ナイス!!", rand(80, 280), rand(150, 350));
+    kissSound();
+  } else {
+    boomText("おしい!", rand(80, 280), rand(150, 350));
+  }
+  mgTries--;
+  $("mgCounter").textContent = "残り: " + mgTries + " 回 / 成功: " + mgSuccesses;
+  if (mgTries <= 0) {
+    setTimeout(endMinigame, 600);
+  }
+}
+
+function endMinigame() {
+  clearInterval(mgInterval);
+  mgInterval = null;
+  $("minigame").classList.remove("show");
+  if (mgSuccesses >= 2) {
+    state.love += 30;
+    flash("rainbow");
+    spawnConfetti(40);
+    showSpeech("もぉ…キミの口説き方、ズルすぎ…♡");
+    for (let i=0; i<10; i++) setTimeout(() => floatIcon("💋", rand(50,350), rand(150,400)), i*80);
+  } else if (mgSuccesses === 1) {
+    state.love += 5;
+    showSpeech("ふ〜ん、まあまあかな?");
+  } else {
+    state.love -= 5;
+    showSpeech("ちょっと…ナシかな…");
+    flash("red");
+    shakeScreen();
+  }
+  updateHUD();
+  checkEnding();
+}
+
+function checkEnding() {
+  if (state.ended) return;
+
+  if (state.money <= 0 && state.love < 80) {
+    return triggerEnding({
+      emoji: "💸",
+      title: "金欠エンド",
+      rank: "F",
+      text: "君は無一文になった。\nぽよんちゃんは次のお客さんに笑顔を向けていた。\n所詮、そんなもんだ。"
+    });
+  }
+
+  if (state.drunk >= 95 && state.love < 70) {
+    return triggerEnding({
+      emoji: "🤮",
+      title: "介護エンド",
+      rank: "D",
+      text: "酔い潰れたぽよんちゃんを介抱して、\n君は朝までトイレで彼女の背中をさすっていた。\n…これも青春?"
+    });
+  }
+
+  if (state.love >= 100) {
+    return triggerEnding({
+      emoji: "👰💍",
+      title: "プロポーズ大成功エンド",
+      rank: "SS",
+      text: "「キミと…結婚したい」\n勢いで言った言葉に、\nぽよんちゃんは涙を浮かべて頷いた。\n\n3年後、君らは元気な双子のママとパパに。\nスナック『ぽよん』は今も繁盛中。"
+    });
+  }
+}
+
+function triggerEnding(data) {
+  state.ended = true;
+  $("endEmoji").textContent = data.emoji;
+  $("endTitle").textContent = "🎉 " + data.title + " 🎉";
+  $("endRank").textContent = data.rank;
+  $("endText").textContent = data.text;
+  $("ending").classList.add("show");
+  spawnConfetti(80);
+  flash("rainbow");
+}
+
+setInterval(() => {
+  if (state.ended) return;
+  if (state.drunk > 0) {
+    state.drunk = Math.max(0, state.drunk - 0.5);
+    updateHUD();
+  }
+}, 1000);
+
+setInterval(() => {
+  if (state.ended) return;
+  if (Math.random() < 0.15) {
+    const events = [
+      () => { showSpeech("お通しサービスです♡ (-500円)"); state.money = Math.max(0, state.money - 500); updateHUD(); },
+      () => { showSpeech("ねぇ、見て見て〜♪"); floatIcon("✨", 200, 200); state.love += 2; updateHUD(); },
+      () => { showSpeech("ちょっと暑くない?"); flash("white"); },
+      () => { showSpeech("お客さん、いいネクタイ〜♡"); state.love += 3; updateHUD(); }
+    ];
+    events[irand(0, events.length-1)]();
+  }
+}, 8000);
+
 function startGame() {
-  showScreen("game");
-  state.scene = "start";
-  state.index = 0;
-  runScene();
+  $("title").classList.add("hidden");
+  state.love = 0;
+  state.drunk = 0;
+  state.money = 5000;
+  state.stage = 1;
+  state.ended = false;
+  $("ending").classList.remove("show");
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+  }
+  poyonSound();
+  showSpeech("いらっしゃ〜い♡");
+  updateHUD();
+  spawnConfetti(20);
 }
 
 function restart() {
-  state.hp = 100;
-  state.drunk = 50;
-  state.bonnou = 99;
-  state.money = 300;
-  state.flags = {};
-  showScreen("warning");
+  $("ending").classList.remove("show");
+  $("title").classList.remove("hidden");
+  $("menu").classList.remove("show");
 }
-
-function updateStatus() {
-  $("hp").textContent = state.hp;
-  $("drunk").textContent = state.drunk;
-  $("bonnou").textContent = state.bonnou;
-  $("money").textContent = state.money;
-}
-
-function toggleMenu() {
-  $("menu").classList.toggle("show");
-}
-
-function setChar(emoji, fx) {
-  const c = $("char");
-  c.textContent = emoji;
-  c.className = "character";
-  if (fx) {
-    void c.offsetWidth;
-    c.classList.add(fx);
-  }
-}
-function setBg(emoji) { $("bg").textContent = emoji; }
-function effect(name) {
-  const e = $("effect");
-  e.className = "effect " + name;
-  setTimeout(() => e.className = "effect", 1200);
-}
-
-// ============== シナリオ ==============
-const scenes = {
-  start: [
-    { bg: "🌙", char: "🍶", speaker: "ナレーション",
-      text: "深夜2時。\n君は飲み会の帰り、なぜかコンビニにいる。\n財布の中には300円。腹の中にはビール5杯。" },
-    { speaker: "心の声", char: "🤤",
-      text: "(なんか…甘いもの食べたい…)\n(あと…なんかエッチな気分…)\n(なんで?知らん。酒のせい。)" },
-    { speaker: "心の声", char: "🤔",
-      text: "コンビニの自動ドアが、君を待っている。\nどうする?",
-      choices: [
-        { text: "とりあえず入る(普通)", next: "kombini1" },
-        { text: "ドアの前で深呼吸する(変態)", next: "deep_breath", effect: () => { state.bonnou += 10; } },
-        { text: "やっぱ帰る", next: "go_home" }
-      ]
-    }
-  ],
-
-  go_home: [
-    { speaker: "ナレーション", char: "🚶",
-      text: "君は賢明にも家に帰った。\nそして布団に倒れ込んだ。\n…なにも起きなかった。" },
-    { ending: "賢者エンド", rank: "S",
-      text: "煩悩に打ち勝った君は、明日も健全な社会人として目覚めるだろう。\n…つまんねぇ人生だな。" }
-  ],
-
-  deep_breath: [
-    { speaker: "通行人", char: "👮",
-      text: "「お兄さん、大丈夫?」\n警察官に職務質問された。", effect: () => { state.bonnou -= 5; }
-    },
-    { speaker: "主人公", char: "😅",
-      text: "「だ、大丈夫です!ちょっと酔ってて…」\n命からがらコンビニに入った。",
-      next: "kombini1"
-    }
-  ],
-
-  kombini1: [
-    { bg: "🏪", char: "💁‍♀️", speaker: "店員",
-      text: "「いらっしゃいませ〜♡」\n\nなんか…店員さん、めっちゃテンション高くない?\nしかも、深夜なのに完璧なメイク。" },
-    { speaker: "店員", char: "💁‍♀️",
-      text: "「お兄さん、お酒入ってる?\nウチの店、今日特別キャンペーン中なんですよ〜♡」",
-      effect: () => { effect("heart"); }
-    },
-    { speaker: "心の声", char: "🤨",
-      text: "(キャンペーン…?\n深夜のコンビニで…?\n絶対なんかおかしいやろ。)",
-      choices: [
-        { text: "「どんなキャンペーンですか?」(乗る)", next: "campaign" },
-        { text: "「いえ、結構です」(冷静)", next: "shopping" },
-        { text: "「結婚してください」(酔っ払い)", next: "propose", effect: () => { state.drunk += 20; } }
-      ]
-    }
-  ],
-
-  propose: [
-    { speaker: "店員", char: "😨",
-      text: "「えっ……」\n\n店内が静まり返った。\n冷蔵庫の音だけが響く。" },
-    { speaker: "店員", char: "😤",
-      text: "「お兄さん、酔っ払いすぎ!\nちゃんと水買って帰って!」\n\n君は2リットルの水を強制購入させられた。",
-      effect: () => { state.money -= 200; state.drunk -= 30; state.bonnou -= 20; }
-    },
-    { next: "shopping" }
-  ],
-
-  campaign: [
-    { speaker: "店員", char: "💁‍♀️",
-      text: "「えっとですね〜♡\nお会計の時に\n『今夜、月が綺麗ですね』\nって言ってくれたら……」",
-      effect: () => { effect("heart"); }
-    },
-    { speaker: "店員", char: "😏",
-      text: "「秘密のサービスがあります♡」\n\n秘密のサービス。\nおい。なんだそれ。" },
-    { speaker: "心の声", char: "🥵",
-      text: "(待て待て待て。\n冷静になれ俺。\nこれ絶対、罠か詐欺か、最高の夜の始まりかのどれかだ。)",
-      effect: () => { state.bonnou += 15; }
-    },
-    { next: "shopping" }
-  ],
-
-  shopping: [
-    { bg: "🥫", char: "🛒", speaker: "ナレーション",
-      text: "とりあえず買い物しよう。\n何を買う?",
-      choices: [
-        { text: "肉まん(120円)", next: "nikuman", effect: () => { state.money -= 120; state.hp += 20; } },
-        { text: "エナドリ(200円)", next: "energy", effect: () => { state.money -= 200; state.drunk -= 20; state.hp += 10; } },
-        { text: "謎の新商品『恋する豆乳』(180円)", next: "tounyu", effect: () => { state.money -= 180; state.bonnou += 30; } },
-        { text: "何も買わない", next: "kaikei" }
-      ]
-    }
-  ],
-
-  nikuman: [
-    { speaker: "ナレーション", char: "🥟",
-      text: "肉まんを温めてもらった。\nふっくらしてて、いい匂い。\n人生で一番美味そうに見えた。",
-      next: "kaikei"
-    }
-  ],
-
-  energy: [
-    { speaker: "ナレーション", char: "⚡",
-      text: "謎の海外製エナドリ。\n缶に『FOR REAL MAN』と書いてある。\n不安。",
-      next: "kaikei"
-    }
-  ],
-
-  tounyu: [
-    { speaker: "店員", char: "😍",
-      text: "「お兄さん、それ選ぶの!?\nセンスありますね♡\nそれ、飲んだ人みんな……うふふ」" },
-    { speaker: "心の声", char: "😱",
-      text: "(うふふ、じゃねぇよ。\n何が起きるんだよ。)",
-      effect: () => { state.bonnou += 20; },
-      next: "kaikei"
-    }
-  ],
-
-  kaikei: [
-    { bg: "💰", char: "💁‍♀️", speaker: "店員",
-      text: "「お会計、ご一緒に温めますか〜?♡」\n\n温めるのは商品か、それとも……" },
-    { speaker: "心の声", char: "🤯",
-      text: "ここで例の合言葉を言うかどうか……\n月、綺麗かな?",
-      choices: [
-        { text: "「今夜、月が綺麗ですね」", next: "secret", effect: () => { state.bonnou += 20; } },
-        { text: "普通に支払う", next: "normal_pay" },
-        { text: "「あなたが月です」", next: "tsuki_dayo", effect: () => { state.drunk += 10; } }
-      ]
-    }
-  ],
-
-  tsuki_dayo: [
-    { speaker: "店員", char: "🤣",
-      text: "「ぶふっ……ww\nおにいさんwww\n酔っ払いすぎですってww」\n\n店員さん、笑い崩れた。" },
-    { speaker: "店員", char: "😊",
-      text: "「でも、ちょっと面白いから\nおまけしときます♡」\n\nおにぎりをサービスしてもらった。",
-      effect: () => { state.hp += 30; state.bonnou += 5; },
-      next: "exit"
-    }
-  ],
-
-  normal_pay: [
-    { speaker: "ナレーション", char: "💴",
-      text: "普通に支払った。\n普通にお釣りをもらった。\n普通の夜。",
-      next: "exit"
-    }
-  ],
-
-  secret: [
-    { speaker: "店員", char: "😳",
-      text: "「……っ!\nほ、本当に言うなんて……」\n\n店員さんの顔が真っ赤になった。",
-      effect: () => { effect("flash"); }
-    },
-    { speaker: "店員", char: "💋",
-      text: "「じゃあ……バックヤードに来てください……\nレジ閉めるんで……♡」" },
-    { speaker: "心の声", char: "🤤",
-      text: "(まさか…!?\nまさかこれは…!?)",
-      choices: [
-        { text: "ついていく(行くしかない)", next: "backyard" },
-        { text: "「やっぱやめときます!」と逃げる", next: "escape" }
-      ]
-    }
-  ],
-
-  escape: [
-    { speaker: "ナレーション", char: "🏃",
-      text: "君は走って逃げた。\n肉まんを握りしめて。\n夜風が冷たい。" },
-    { ending: "ヘタレエンド", rank: "C",
-      text: "賢明な判断だったかもしれない。\nでも、君は一生『あの時行ってればなぁ』と言い続けるだろう。\n知らんけど。"
-    }
-  ],
-
-  backyard: [
-    { bg: "📦", char: "🚪", speaker: "ナレーション",
-      text: "バックヤードに通された。\n段ボールが積まれた、薄暗い部屋。\n胸の鼓動が早い。" },
-    { speaker: "店員", char: "😈",
-      text: "「お兄さん……♡\n覚悟、できてます……?」",
-      effect: () => { effect("heart"); }
-    },
-    { speaker: "心の声", char: "🥵",
-      text: "(きた…!\nついに俺の青春が…!)\n\nゴクリ。",
-      next: "reveal"
-    }
-  ],
-
-  reveal: [
-    { speaker: "店員", char: "🎤",
-      text: "「ジャジャーン!!\n当店、24時間カラオケキャンペーン中!!\n一緒に歌いましょう!!!」",
-      effect: () => { effect("flash"); }
-    },
-    { bg: "🎤", char: "😶", speaker: "心の声",
-      text: "(……は?)\n(カラオケ?)\n(カラオケって…えっと…あの…歌う方の?)" },
-    { speaker: "店員", char: "🎶",
-      text: "「バックヤード、防音なんですよ〜♡\n深夜だからストレス発散しに来てくれたお客さんに\n秘密のカラオケサービスしてるんです♡」",
-      choices: [
-        { text: "「…じゃあ、歌います」(諦め)", next: "sing" },
-        { text: "「ふざけんな!」とキレる", next: "blow_up" },
-        { text: "「いやでも俺、月が…」", next: "tsuki_chigau" }
-      ]
-    }
-  ],
-
-  tsuki_chigau: [
-    { speaker: "店員", char: "😇",
-      text: "「えっ?月?何の話ですか?\nウチの合言葉は『カラオケしたい』ですよ?\nお客さん、何か変な勘違いしてません?w」"
-    },
-    { speaker: "心の声", char: "💀",
-      text: "(\\(^o^)/オワタ)\n(俺はとんでもない勘違い野郎だ……)",
-      next: "sing"
-    }
-  ],
-
-  blow_up: [
-    { speaker: "主人公", char: "🤬",
-      text: "「ふざけんな!!\nこっちはエロい展開を期待してたんだ!!」" },
-    { speaker: "店員", char: "📞",
-      text: "「えっ、こわ。通報します」\n\n警察が来た。",
-      effect: () => { state.hp = 0; }
-    },
-    { ending: "逮捕エンド", rank: "F",
-      text: "君は公然わいせつ未遂(?)で連行された。\n会社にもバレた。\n人生終了。\n\n…まあ、酔ってる時は冷静になろうね。"
-    }
-  ],
-
-  sing: [
-    { bg: "🎤", char: "🎙️", speaker: "ナレーション",
-      text: "君は店員さんとデュエットで\n『секретный песня』を熱唱した。\n(なぜかロシア語の曲が流れた)" },
-    { speaker: "店員", char: "🥰",
-      text: "「お兄さん、めっちゃ歌うまい!\nまた来てくださいね♡」",
-      effect: () => { effect("heart"); state.bonnou -= 30; state.hp += 20; }
-    },
-    { speaker: "ナレーション", char: "🌅",
-      text: "気づけば朝。\nなぜか肩が筋肉痛。\n君はコンビニを後にした。\nなんか…清々しい。"
-    },
-    { ending: "カラオケエンド", rank: "B",
-      text: "エロは無かった。\nでも、なんか満たされた夜だった。\n…これでいいのか?\nいや、これがいいんだ。"
-    }
-  ],
-
-  exit: [
-    { bg: "🌃", char: "🚶", speaker: "ナレーション",
-      text: "コンビニを出た。\n夜風が気持ちいい。\n…なんだろう、この敗北感。" },
-    { speaker: "???", char: "👴",
-      text: "「兄ちゃん、ちょっといいか?」\n\n突然、見知らぬおじさんに声をかけられた。",
-      choices: [
-        { text: "「はい?」(対応)", next: "oji_san" },
-        { text: "全力ダッシュで逃げる", next: "dash_home" }
-      ]
-    }
-  ],
-
-  dash_home: [
-    { speaker: "ナレーション", char: "💨",
-      text: "君は全力で家まで走った。\n息切れがやばい。\n肉まんが冷めた。" },
-    { ending: "無事帰宅エンド", rank: "A",
-      text: "君は無事に家に帰った。\n肉まんを食べて寝た。\nまあ、これが正解だよね。\n青春ってそんなもん。"
-    }
-  ],
-
-  oji_san: [
-    { speaker: "おじさん", char: "👴",
-      text: "「兄ちゃん、若いな〜。\nワシな、昔この街で\nめっちゃモテたんよ。」" },
-    { speaker: "おじさん", char: "👴",
-      text: "「秘訣、教えたろか?」",
-      choices: [
-        { text: "「お願いします!」", next: "hiketsu" },
-        { text: "「いやいい」", next: "iya_ii" }
-      ]
-    }
-  ],
-
-  iya_ii: [
-    { speaker: "おじさん", char: "😢",
-      text: "「そっか……」\n\nおじさんは寂しそうに歩いていった。\n振り返ると、もういなかった。" },
-    { ending: "謎エンド", rank: "?",
-      text: "あのおじさんは何者だったのか。\nそもそも、本当にいたのか。\n君は今でも、たまに夢に見る。"
-    }
-  ],
-
-  hiketsu: [
-    { speaker: "おじさん", char: "🧙",
-      text: "「ええか?\nモテる秘訣はな……」\n\nおじさんが顔を近づけてくる。" },
-    { speaker: "おじさん", char: "✨",
-      text: "「\n     『     寝     ろ     』\n」\n\n……。",
-      effect: () => { effect("flash"); }
-    },
-    { speaker: "おじさん", char: "👴",
-      text: "「ええか、兄ちゃん。\n夜更かしして煩悩抱えてコンビニ徘徊しとる時点で\nモテるわけないんや。\n早く寝ぇ。肌綺麗にして筋トレせぇ。」"
-    },
-    { speaker: "心の声", char: "😶",
-      text: "(あまりにも、正論だった……)",
-      effect: () => { state.bonnou = 0; }
-    },
-    { ending: "悟りエンド", rank: "SS",
-      text: "君は人生で大切なことを学んだ。\n煩悩は寝れば消える。\n筋肉は裏切らない。\n月は綺麗だが、布団はもっと綺麗だ。\n\n〜完〜"
-    }
-  ]
-};
-
-// ============== ゲームエンジン ==============
-function runScene() {
-  const scene = scenes[state.scene];
-  if (!scene) return;
-  if (state.index >= scene.length) return;
-
-  const node = scene[state.index];
-
-  if (node.ending) {
-    showEnding(node);
-    return;
-  }
-
-  if (node.bg) setBg(node.bg);
-  if (node.char) setChar(node.char, "bounce");
-  if (node.speaker) $("speaker").textContent = node.speaker;
-  if (node.effect) node.effect();
-
-  updateStatus();
-
-  $("choices").innerHTML = "";
-  $("nextHint").classList.add("hidden");
-
-  if (node.text) {
-    typeText(node.text, () => {
-      if (node.choices) {
-        renderChoices(node.choices);
-      } else if (node.next) {
-        $("nextHint").classList.remove("hidden");
-        waitTap(() => {
-          state.scene = node.next;
-          state.index = 0;
-          runScene();
-        });
-      } else {
-        $("nextHint").classList.remove("hidden");
-        waitTap(() => {
-          state.index++;
-          runScene();
-        });
-      }
-    });
-  } else if (node.next) {
-    state.scene = node.next;
-    state.index = 0;
-    runScene();
-  }
-}
-
-function typeText(text, done) {
-  state.typing = true;
-  state.fullText = text;
-  const el = $("text");
-  el.textContent = "";
-  let i = 0;
-  const speed = 30;
-  function step() {
-    if (!state.typing) {
-      el.textContent = text;
-      done();
-      return;
-    }
-    if (i < text.length) {
-      el.textContent += text[i++];
-      setTimeout(step, speed);
-    } else {
-      state.typing = false;
-      done();
-    }
-  }
-  step();
-}
-
-function renderChoices(choices) {
-  const c = $("choices");
-  c.innerHTML = "";
-  choices.forEach(ch => {
-    const btn = document.createElement("button");
-    btn.textContent = ch.text;
-    bindTap(btn, () => {
-      if (ch.effect) ch.effect();
-      state.scene = ch.next;
-      state.index = 0;
-      runScene();
-    });
-    c.appendChild(btn);
-  });
-}
-
-let tapHandler = null;
-let tapTouchHandler = null;
-function waitTap(callback) {
-  removeTap();
-  const fire = (e) => {
-    if (e.target.closest(".choices") || e.target.closest(".menu-btn") || e.target.closest(".menu")) return;
-    if (state.typing) {
-      state.typing = false;
-      e.preventDefault && e.preventDefault();
-      return;
-    }
-    removeTap();
-    e.preventDefault && e.preventDefault();
-    callback();
-  };
-  tapHandler = fire;
-  tapTouchHandler = fire;
-  setTimeout(() => {
-    document.addEventListener("click", tapHandler);
-    document.addEventListener("touchend", tapTouchHandler, { passive: false });
-  }, 150);
-}
-function removeTap() {
-  if (tapHandler) document.removeEventListener("click", tapHandler);
-  if (tapTouchHandler) document.removeEventListener("touchend", tapTouchHandler);
-  tapHandler = null;
-  tapTouchHandler = null;
-}
-
-function showEnding(node) {
-  showScreen("ending");
-  $("endingTitle").textContent = "🎉 " + node.ending + " 🎉";
-  $("endingText").textContent = node.text;
-  $("endingRank").textContent = "RANK: " + node.rank;
-}
-
-// イベントバインド (inline onclick は iOS Safari の file:// で塞がれる場合があるため)
-function bindTap(el, handler) {
-  if (!el) return;
-  let consumed = false;
-  el.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    consumed = true;
-    handler(e);
-    setTimeout(() => { consumed = false; }, 400);
-  }, { passive: false });
-  el.addEventListener("click", (e) => {
-    if (consumed) return;
-    handler(e);
-  });
-}
-
-document.addEventListener("DOMContentLoaded", init);
-if (document.readyState !== "loading") init();
 
 function init() {
   bindTap($("btnStart"), startGame);
-  bindTap($("btnQuit"), () => alert("帰っていいよ"));
-  bindTap($("btnMenu"), toggleMenu);
+  bindTap($("btnPlayAgain"), () => {
+    $("ending").classList.remove("show");
+    startGame();
+  });
+  bindTap($("btnMenu"), () => $("menu").classList.toggle("show"));
   bindTap($("btnRestart"), restart);
-  bindTap($("btnCloseMenu"), toggleMenu);
-  bindTap($("btnEndRestart"), restart);
-  showScreen("warning");
+  bindTap($("btnCloseMenu"), () => $("menu").classList.remove("show"));
+
+  bindTap($("poyon"), onPoyonTap);
+  bindTap($("actDrink"), doDrink);
+  bindTap($("actGift"), doGift);
+  bindTap($("actSing"), doSing);
+  bindTap($("actKuchi"), doKuchi);
+  bindTap($("mashBtn"), mashTap);
 }
 
+if (document.readyState !== "loading") init();
+else document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
