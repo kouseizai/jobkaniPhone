@@ -434,30 +434,43 @@ function renderChoices(choices) {
   choices.forEach(ch => {
     const btn = document.createElement("button");
     btn.textContent = ch.text;
-    btn.onclick = () => {
+    bindTap(btn, () => {
       if (ch.effect) ch.effect();
       state.scene = ch.next;
       state.index = 0;
       runScene();
-    };
+    });
     c.appendChild(btn);
   });
 }
 
 let tapHandler = null;
+let tapTouchHandler = null;
 function waitTap(callback) {
-  if (tapHandler) document.removeEventListener("click", tapHandler);
-  tapHandler = (e) => {
+  removeTap();
+  const fire = (e) => {
     if (e.target.closest(".choices") || e.target.closest(".menu-btn") || e.target.closest(".menu")) return;
     if (state.typing) {
       state.typing = false;
+      e.preventDefault && e.preventDefault();
       return;
     }
-    document.removeEventListener("click", tapHandler);
-    tapHandler = null;
+    removeTap();
+    e.preventDefault && e.preventDefault();
     callback();
   };
-  setTimeout(() => document.addEventListener("click", tapHandler), 100);
+  tapHandler = fire;
+  tapTouchHandler = fire;
+  setTimeout(() => {
+    document.addEventListener("click", tapHandler);
+    document.addEventListener("touchend", tapTouchHandler, { passive: false });
+  }, 150);
+}
+function removeTap() {
+  if (tapHandler) document.removeEventListener("click", tapHandler);
+  if (tapTouchHandler) document.removeEventListener("touchend", tapTouchHandler);
+  tapHandler = null;
+  tapTouchHandler = null;
 }
 
 function showEnding(node) {
@@ -467,5 +480,31 @@ function showEnding(node) {
   $("endingRank").textContent = "RANK: " + node.rank;
 }
 
-// 初期表示
-showScreen("warning");
+// イベントバインド (inline onclick は iOS Safari の file:// で塞がれる場合があるため)
+function bindTap(el, handler) {
+  if (!el) return;
+  let consumed = false;
+  el.addEventListener("touchend", (e) => {
+    e.preventDefault();
+    consumed = true;
+    handler(e);
+    setTimeout(() => { consumed = false; }, 400);
+  }, { passive: false });
+  el.addEventListener("click", (e) => {
+    if (consumed) return;
+    handler(e);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", init);
+if (document.readyState !== "loading") init();
+
+function init() {
+  bindTap($("btnStart"), startGame);
+  bindTap($("btnQuit"), () => alert("帰っていいよ"));
+  bindTap($("btnMenu"), toggleMenu);
+  bindTap($("btnRestart"), restart);
+  bindTap($("btnCloseMenu"), toggleMenu);
+  bindTap($("btnEndRestart"), restart);
+  showScreen("warning");
+}

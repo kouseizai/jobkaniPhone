@@ -16,8 +16,8 @@
     <p>クオリティに期待しないでください。</p>
     <p>酔った状態でのプレイを推奨します。</p>
     <p class="age">18歳未満禁止<br>(なんとなく)</p>
-    <button class="btn-main" onclick="startGame()">酔ってる、入る</button>
-    <button class="btn-sub" onclick="alert('帰っていいよ')">素面なので帰る</button>
+    <button class="btn-main" id="btnStart">酔ってる、入る</button>
+    <button class="btn-sub" id="btnQuit">素面なので帰る</button>
   </div>
 </div>
 
@@ -42,10 +42,10 @@
     <div class="next-hint" id="nextHint">▼タップで次へ</div>
   </div>
 
-  <button class="menu-btn" onclick="toggleMenu()">≡</button>
+  <button class="menu-btn" id="btnMenu">≡</button>
   <div class="menu" id="menu">
-    <button onclick="restart()">最初から</button>
-    <button onclick="toggleMenu()">閉じる</button>
+    <button id="btnRestart">最初から</button>
+    <button id="btnCloseMenu">閉じる</button>
   </div>
 </div>
 
@@ -54,7 +54,7 @@
     <h1 id="endingTitle">エンディング</h1>
     <p id="endingText"></p>
     <p class="rank" id="endingRank"></p>
-    <button class="btn-main" onclick="restart()">もう一度</button>
+    <button class="btn-main" id="btnEndRestart">もう一度</button>
   </div>
 </div>
 
